@@ -1,4 +1,5 @@
+*.pyc
 config.cfg
-images.sqlite3
+*.sqlite3
 venv
 images
