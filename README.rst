@@ -30,6 +30,14 @@ Setup
 Usage
 =====
 
-ToDo: Rewrite me.
+::
 
+  $ python twitterimages --sync
+  to load images from the image_dir to the database
+
+  $ python twitterimages --post
+  to post next least posted image
+
+  $ python twitterimages
+  just look for replies and update captions
 
