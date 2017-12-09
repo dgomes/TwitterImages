@@ -10,25 +10,28 @@ from config import p as Config
 logging.basicConfig(format='%(asctime)s %(name)s %(message)s', level=logging.DEBUG)
 
 def post(bot, db):
-    img = db.get_image()
-    logging.info("Posting: {}".format(img))
-    if len(img.statuses):
-        new_caption = (0,img.caption)
-        for s in img.statuses:
-            favs = bot.get_favs(s.twitter_status_id)
-            if favs > new_caption[0]:
-                new_caption = (favs, s.twitter_status_text)
-        img.caption = new_caption[1].replace(Config.get("twitter", "screen_name"), '')
+    try: 
+        img = db.get_image()
+        logging.info("Posting: {}".format(img))
+        if len(img.statuses):
+            new_caption = (0,img.caption)
+            for s in img.statuses:
+                favs = bot.get_favs(s.twitter_status_id)
+                if favs > new_caption[0]:
+                    new_caption = (favs, s.twitter_status_text)
+            img.caption = new_caption[1].replace(Config.get("twitter", "screen_name"), '')
 
-    if img.caption != None: 
-        status = img.caption
-    else:
-        status = Config.get("messages", "missing_caption")
-    status_id = bot.publish(os.path.join(Config.get("main", "images_dir"),img.filename), status)
-    img.times_published+=1
-    img.statuses.append(Status(twitter_status_id=status_id, twitter_status_text=status))
-    logging.info("Updating image to {}".format(img))
-    db.update(img)
+        if img.caption != None: 
+            status = img.caption
+        else:
+            status = Config.get("messages", "missing_caption")
+        status_id = bot.publish(os.path.join(Config.get("main", "images_dir"),img.filename), status)
+        img.times_published+=1
+        img.statuses.append(Status(twitter_status_id=status_id, twitter_status_text=status))
+        logging.info("Updating image to {}".format(img))
+        db.update(img)
+    except Exception as e:
+        logging.error(e)
 
 def sync(db):
     db.sync_dir(Config.get("main", "images_dir"))

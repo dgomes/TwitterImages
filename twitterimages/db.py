@@ -50,14 +50,15 @@ class DB():
     def sync_dir(self,dirname="images"):
         logging.info("Syncing directory <{}>".format(dirname))
         for f in os.listdir(dirname):
-            if os.path.isfile(f) and "image" in magic.from_file(os.path.join(dirname,f), mime=True):
+            if os.path.isfile(os.path.join(dirname,f)) and "image" in magic.from_file(os.path.join(dirname,f), mime=True):
                 if self.session.query(exists().where(Image.filename==str(f))).scalar() == 0:
                     i = Image(filename=str(f))    
                     self.session.add(i)
                     logging.info("Adding {}".format(f)) 
                 else:
                     logging.info("Skipping {}".format(f)) 
-
+            else:
+                logging.debug("ignoring {}".format(f))
         self.session.commit()
 
     def get_image(self, status_id=None):
