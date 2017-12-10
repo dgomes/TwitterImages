@@ -1,3 +1,4 @@
+import requests
 import logging
 logging.getLogger('tweepy').setLevel(logging.WARN)
 logging.getLogger('urllib3').setLevel(logging.WARN)
@@ -30,6 +31,23 @@ class Bot:
     def get_favs(self, status_id):
         s = self.api.get_status(status_id)
         return s.favorite_count
+
+    def _findlocation(self, place):
+        url = 'https://maps.googleapis.com/maps/api/geocode/json'
+        params = {'sensor': 'false', 'address': place}
+        r = requests.get(url, params=params)
+        results = r.json()['results']
+        logging.debug(results)
+        location = results[0]['geometry']['location']
+        logging.debug(location)
+        return location['lat'], location['lng']
+
+    def search_users(self, search, location):
+        loc = self._findlocation(location)
+        return [r.user for r in self.api.search(q=search,geocode="{},{},{}".format(loc[0],loc[1],"20km")) if location in r.user.location]
+
+    def follow(self, user_id):
+        self.api.create_friendship(user_id)
 
     def replies(self, min_fav=1):
         user_timeline = self.api.user_timeline()
