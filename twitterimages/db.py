@@ -71,8 +71,8 @@ class DB():
             return i
         except Exception as e:
             logging.error(e)
-			if status_id != None:
-				return None
+            if status_id != None:
+                return None
             logging.error("No Images available")
             sys.exit(2)
 
