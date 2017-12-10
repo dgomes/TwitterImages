@@ -13,6 +13,7 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.exc import NoResultFound
 
 class Image(Base):
     __tablename__ = 'images'
@@ -75,6 +76,13 @@ class DB():
                 return None
             logging.error("No Images available")
             sys.exit(2)
+
+    def get_status(self, status_id):
+        try:
+            s = self.session.query(Status).filter_by(twitter_status_id=status_id).one()
+            return s 
+        except NoResultFound:
+            return False
 
     def update(self, image):
         self.session.add(image)

@@ -1,5 +1,5 @@
 import magic
-import logging
+import coloredlogs, logging
 import sys
 import argparse
 import os
@@ -7,7 +7,8 @@ from bot import Bot
 from db import DB,Status
 from config import p as Config
 
-logging.basicConfig(format='%(asctime)s %(name)s %(message)s', level=logging.DEBUG)
+logging.basicConfig(format='%(asctime)s %(name)s %(levelname)s %(message)s', level=logging.DEBUG)
+coloredlogs.install(level='DEBUG')
 
 def post(bot, db):
     try: 
@@ -42,9 +43,13 @@ def process_replies(bot, db):
     for image_status_id,replies in replies.items():
         img = db.get_image(image_status_id)
         if img==None:
+            logging.error("No img for {}".format(image_status_id))
             continue
         logging.info("Replies for {}".format(img))
         for reply in replies:
+            if db.get_status(reply.twitter_status_id) != False: #don't process replies we alread processed
+                logging.debug("Ignoring reply: {}".format(reply))
+                continue
             logging.info("Reply: {}".format(reply))
             if not reply.twitter_status_id in [s.twitter_status_id for s in img.statuses]:
                 img.statuses.append(reply)
