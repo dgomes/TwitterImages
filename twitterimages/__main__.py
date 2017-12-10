@@ -41,6 +41,8 @@ def process_replies(bot, db):
     logging.debug("Replies: {}".format(replies))
     for image_status_id,replies in replies.items():
         img = db.get_image(image_status_id)
+		if img==None:
+			continue
         logging.info("Replies for {}".format(img))
         for reply in replies:
             logging.info("Reply: {}".format(reply))
