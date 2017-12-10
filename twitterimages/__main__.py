@@ -58,8 +58,9 @@ def main(args):
     if args.sync:
         sync(db)
     if args.post:
-        process_replies(b, db)
         post(b, db)
+    if args.replies:
+        process_replies(b, db)
 
     if args.follow_search or args.follow_location:
         users = b.search_users(args.follow_search, args.follow_location)
@@ -72,6 +73,7 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Twitter Image Bot")
     parser.add_argument('--sync', help='syncronize imagedir with database', action='store_true')
+    parser.add_argument('--replies', help='syncronize replies', action='store_true')
     parser.add_argument('--post', help='post an image', action='store_true')
     parser.add_argument('--follow_search', help='follow users talking about', action='store')
     parser.add_argument('--follow_location', help='follow users with provided location', action='store')
