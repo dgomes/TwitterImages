@@ -33,14 +33,17 @@ class Bot:
         return s.favorite_count
 
     def _findlocation(self, place):
-        url = 'https://maps.googleapis.com/maps/api/geocode/json'
-        params = {'sensor': 'false', 'address': place}
-        r = requests.get(url, params=params)
-        results = r.json()['results']
-        logging.debug(results)
-        location = results[0]['geometry']['location']
-        logging.debug(location)
-        return location['lat'], location['lng']
+        try:
+            url = 'https://maps.googleapis.com/maps/api/geocode/json'
+            params = {'sensor': 'false', 'address': place}
+            r = requests.get(url, params=params)
+            results = r.json()['results']
+            logging.debug(results)
+            location = results[0]['geometry']['location']
+            logging.debug(location)
+            return location['lat'], location['lng']
+        except:
+            return None, None
 
     def search_users(self, search, location):
         loc = self._findlocation(location)
