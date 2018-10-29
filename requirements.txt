@@ -3,7 +3,7 @@ chardet==3.0.4
 idna==2.6
 oauthlib==2.0.6
 python-magic==0.4.15
-requests==2.18.4
+requests>=2.20.0
 requests-oauthlib==0.8.0
 six==1.11.0
 SQLAlchemy==1.1.15
