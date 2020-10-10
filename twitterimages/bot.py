@@ -50,7 +50,7 @@ class Bot:
         return [r.user for r in self.api.search(q=search,geocode="{},{},{}".format(loc[0],loc[1],"20km")) if location in r.user.location]
 
     def follow(self, user_id):
-        self.api.create_friendship(user_id)
+        return self.api.create_friendship(user_id)
 
     def replies(self, min_fav=1):
         user_timeline = self.api.user_timeline()
