@@ -1,6 +1,6 @@
 configparser
 coloredlogs
-certifi==2017.11.5
+certifi==2022.12.7
 chardet==3.0.4
 idna==2.6
 oauthlib==2.0.6
